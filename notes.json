@@ -6,6 +6,7 @@
     { "note": 14, "matiere": "Big Data" },
     { "note": 16, "matiere": "Cybersecurity" },
     { "note": 13, "matiere": "Cloud Computing" },
-    { "note": 17, "matiere": "Machine Learning" }
+    { "note": 17, "matiere": "Machine Learning" },
+    { "note": 8, "matiere": "Data Mining" }
   ]
 }
