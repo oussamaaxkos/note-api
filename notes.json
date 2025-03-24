@@ -1,0 +1,11 @@
+{
+  "data": [
+    { "note": 12, "matiere": "DW" },
+    { "note": 15, "matiere": "Math" },
+    { "note": 18, "matiere": "AI" },
+    { "note": 14, "matiere": "Big Data" },
+    { "note": 16, "matiere": "Cybersecurity" },
+    { "note": 13, "matiere": "Cloud Computing" },
+    { "note": 17, "matiere": "Machine Learning" }
+  ]
+}
