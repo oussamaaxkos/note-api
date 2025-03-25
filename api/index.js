@@ -1,34 +1,66 @@
 const express = require('express');
+const fs = require('fs');
 const cors = require('cors');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
 app.use(cors());
 app.use(express.json());
 
-let notesData = [
-    { note: 12, matiere: "DW" },
-    { note: 14, matiere: "Big Data" },
-
-];
-
-// Get all notes
-app.get('/notes.json', (req, res) => {
-    res.json({ data: notesData });
+// Root route
+app.get('/', (req, res) => {
+    res.send('Welcome to the Notes API!');
 });
 
-// Add a note via URL query parameters
+// GET route to serve notes.json
+app.get('/notes.json', (req, res) => {
+    fs.readFile('notes.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error("Error reading notes.json:", err);
+            return res.status(500).send("Error reading notes file.");
+        }
+        res.setHeader('Content-Type', 'application/json');
+        res.send(data);
+    });
+});
+
+// GET route to add a new note via query params
 app.get('/add', (req, res) => {
     const { note, matiere } = req.query;
 
-    if (!note || !matiere || isNaN(note)) {
-        return res.status(400).json({ error: "Invalid input. Use /add?note=NUMBER&matiere=TEXT" });
+    if (!note || !matiere) {
+        return res.status(400).send("Missing 'note' or 'matiere' query parameters.");
     }
 
     const newNote = { note: parseInt(note), matiere };
-    notesData.push(newNote);
 
-    res.status(201).json({ message: "Note added successfully!", data: newNote });
+    fs.readFile('notes.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error("Error reading notes.json:", err);
+            return res.status(500).send("Error reading notes file.");
+        }
+
+        let notesData;
+        try {
+            notesData = JSON.parse(data);
+        } catch (parseErr) {
+            return res.status(500).send("Error parsing notes data.");
+        }
+
+        notesData.data.push(newNote);
+
+        fs.writeFile('notes.json', JSON.stringify(notesData, null, 2), (err) => {
+            if (err) {
+                console.error("Error writing to notes.json:", err);
+                return res.status(500).send("Error updating notes file.");
+            }
+            res.status(201).send(`Note added: ${JSON.stringify(newNote)}`);
+        });
+    });
 });
 
-// Export for Vercel Serverless Function
-module.exports = app;
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
