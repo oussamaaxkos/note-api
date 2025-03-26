@@ -7,13 +7,30 @@ app.use(express.json());
 
 let notesData = [
     { note: 12, matiere: "DW" },
-    { note: 14, matiere: "Big Data" },
-    { note: 16, matiere: "Cybersecurity" },
-    { note: 13, matiere: "Cloud Computing" },
-    { note: 17, matiere: "Machine Learning" },
-    { note: 8, matiere: "Data Mining" },
-    { note: 18, matiere: "AI" } // This is the note you want to delete
+    { note: 9, matiere: "Big Data" }
 ];
+
+let studentData = { firstname: "Osama", lastname: "Akeskous", classe: "M2SI" };
+
+// Get student
+app.get('/student.json', (req, res) => {
+    res.json({ data: studentData });
+});
+
+// Update student via URL query parameters
+
+app.get('/update-student', (req, res) => {
+    const { firstname, lastname, classe } = req.query;
+
+    if (!firstname || !lastname || !classe) {
+        return res.status(400).json({ error: "Invalid input. Use /update-student?firstname=TEXT&lastname=TEXT&classe=TEXT" });
+    }
+
+    // Update student data
+    studentData = { firstname, lastname, classe };
+
+    res.status(200).json({ message: "Student data updated successfully!", data: studentData });
+});
 
 // Get all notes
 app.get('/notes.json', (req, res) => {
@@ -42,7 +59,6 @@ app.get('/delete', (req, res) => {
         return res.status(400).json({ error: "Invalid input. Use /delete?note=NUMBER&matiere=TEXT" });
     }
 
-    // Filter the notesData array to remove the note
     const initialLength = notesData.length;
     notesData = notesData.filter(n => n.note !== parseInt(note) || n.matiere !== matiere);
 
