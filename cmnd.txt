@@ -1,0 +1,6 @@
+GET DATA : https://note-api-henna.vercel.app/notes.json
+PUT DATA : https://note-api-henna.vercel.app/add?note=18&matiere=AI
+DELETE DATA : https://note-api-henna.vercel.app/delete?note=18&matiere=AI
+
+
+GET DATA : https://note-api-henna.vercel.app/student.json
